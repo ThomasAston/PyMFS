@@ -48,6 +48,7 @@ class B_mat:
         # ax.plot_surface(X, Y, phi, rstride=1, cstride=1,
         #         cmap='viridis', edgecolor='none')
         ax.contour(X,Y,phi,50,cmap='cool')
+        ax.set_title(r'Weight function $\varphi$')
         ax.set_xlabel('x')
         ax.set_ylabel('y')
         ax.zaxis.set_rotate_label(False)

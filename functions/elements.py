@@ -28,7 +28,8 @@ class elements:
         from matplotlib import pylab
         from matplotlib.lines import Line2D
         from matplotlib.patches import Polygon
-
+        pylab.rcParams["font.family"] = "serif"
+        pylab.rcParams["mathtext.fontset"] = "dejavuserif"
         color = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
         
         fig, ax = pylab.subplots()
@@ -44,7 +45,7 @@ class elements:
          
         pylab.scatter(self.nodes.coor[:,0], 
             self.nodes.coor[:,1],
-            s = 4,
+            s = 30,
             color = 'k')
     
         spheres=[]

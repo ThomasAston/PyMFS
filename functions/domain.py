@@ -48,6 +48,9 @@ class domain:
         from matplotlib import pylab
         from matplotlib.lines import Line2D
 
+        pylab.rcParams["font.family"] = "serif"
+        pylab.rcParams["mathtext.fontset"] = "dejavuserif"
+
         color = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w'] 
         fig, ax = pylab.subplots()
         self.polygon.set_alpha(0.3)

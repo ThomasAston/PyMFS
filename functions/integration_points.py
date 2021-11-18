@@ -53,6 +53,9 @@ class integration_points:
         from matplotlib.lines import Line2D
         from matplotlib.patches import Polygon
 
+        pylab.rcParams["font.family"] = "serif"
+        pylab.rcParams["mathtext.fontset"] = "dejavuserif"
+
         color = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
         
         fig, ax = pylab.subplots()
@@ -68,7 +71,7 @@ class integration_points:
          
         pylab.scatter(self.nodes.coor[:,0], 
             self.nodes.coor[:,1],
-            s = 10,
+            s = 30,
             color = 'k')
     
         spheres=[]

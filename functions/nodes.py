@@ -59,7 +59,13 @@ class nodes:
 
     def plot(self):
         from matplotlib import pylab
+        pylab.rcParams["font.family"] = "serif"
+        pylab.rcParams["mathtext.fontset"] = "dejavuserif"
         self.domain.plot(True)
+
+        pylab.rcParams["font.family"] = "serif"
+        pylab.rcParams["mathtext.fontset"] = "dejavuserif"
+        
         pylab.scatter(self.coor[:,0], 
                     self.coor[:,1],
                     s = 4,
