@@ -1,0 +1,1 @@
+Development of a truly meshless numerical solver, currently focusing on 2D linear elastic static analysis. 
