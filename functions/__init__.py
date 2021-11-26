@@ -6,3 +6,4 @@ from .apply_DoFs import*
 from .integration_points import*
 from .D_mat import* 
 from .B_mat import*
+from .K_mat import*

@@ -1,6 +1,6 @@
 # meshLess_2Day v1
 # Author(s): Thomas Aston
-# Date updated: 18/11/2021 
+# Date updated: 25/11/2021 
 
 # This is the central file for solving problems by calling the various functions required by the meshLess solver.
 
@@ -42,12 +42,11 @@ my_DoFs = apply_DoFs(my_nodes, BC = 'left fixed', load = [0, -100], location = [
 my_intPoints = integration_points(my_domain, my_nodes, my_elements, degree=6)
 
 
-
 ##########################################################################
 # Integrate to find B and K
 ##########################################################################
 
-my_Bmat = B_mat(my_domain, my_nodes, my_elements, x=0.5, y=0.5, current_node = 4)
+my_Bmat = B_mat(my_domain, my_nodes, my_elements, x=0.5, y=0.5, current_node = 3)
 my_Bmat.example_plot()
 # For each integration point find the nodes within the support of the point
 # For each node compute the weight function, shape function and shape function derivatives)
