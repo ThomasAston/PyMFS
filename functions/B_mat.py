@@ -3,7 +3,7 @@
 # To do list:
 # Should probably do some tidying up here
 # Maybe move shepard_PU to its own class entirely???
-#
+# Make more efficient? Calculating derivatives currently takes ages...
 
 import numpy as np
 from .domain import*
@@ -17,12 +17,10 @@ class B_mat:
         self.y = y
         self.current_node = current_node
 
-        # self.example_plot()
         self.phi = self.shepard_PU(x,y)
-        # self.PHI(x, y)
-        self.generate_BMat(x,y)
+        self.value = self.generate_BMat(x,y)
 
-    # # Plotting an example...
+    # Plotting an example...
     def example_plot(self):
         from matplotlib import pylab
 
@@ -55,6 +53,30 @@ class B_mat:
         ax.set_zlabel(r'$\varphi$', rotation = 0);
 
         pylab.show()
+        ################################################################################################
+        ax2 = pylab.axes(projection='3d')
+        i = self.current_node
+
+        dPHI_dx = np.zeros([len(x), len(y)])
+        dPHI_dy = np.zeros([len(x), len(y)])
+        for i in range(0,len(x)):
+            for j in range(0,len(y)):
+                dPHI_dx[i,j], dPHI_dy[i,j] = self.PHI(x[i], y[j])
+        
+        pylab.scatter(self.nodes.coor[:,0], 
+                      self.nodes.coor[:,1],
+                      s = 10,
+                      color = 'k')
+        # ax.plot_surface(X, Y, phi, rstride=1, cstride=1,
+        #         cmap='viridis', edgecolor='none')
+        ax2.contour(X,Y,dPHI_dy,50,cmap='cool')
+        ax2.set_title(r'Shape function derivatives')
+        ax2.set_xlabel('x')
+        ax2.set_ylabel('y')
+        ax2.zaxis.set_rotate_label(False)
+        ax2.set_zlabel(r'$\frac{d\phi}{dx}$', rotation = 0);
+
+        pylab.show()
 
     # Function for generating the B matrix
     def generate_BMat(self, x, y):
@@ -64,14 +86,37 @@ class B_mat:
                           [0, dPHI_dy],
                           [dPHI_dx, dPHI_dy]])
         
-        print(B_mat)
+        # print(B_mat)
+        return B_mat
+
+
+    # Function for evaluating shape function at a point
+    def PHI(self, x, y):
+        order = 0
+        p = self.polynomial_basis(order, x, y)  
+        PHI = self.shepard_PU(x,y)*p
+
+        i = self.current_node
+        x_i = self.nodes.coor[i][0]
+        y_i = self.nodes.coor[i][1]
+
+        dx = 0.1
+        dy = 0.1
+        PHI_right = self.shepard_PU(x+dx,y)*p 
+        PHI_left = self.shepard_PU(x-dx,y)*p 
+        PHI_up = self.shepard_PU(x,y+dy)*p 
+        PHI_down = self.shepard_PU(x,y-dy)*p 
+
+        dPHI_dx = (PHI_right - PHI_left)/(2*dx)
+        dPHI_dy = (PHI_up-PHI_down)/(2*dy)
         
+        return dPHI_dx, dPHI_dy
+
+
     # Function for calculating Shepard partition of unity weight at a given point 
     def shepard_PU(self, x, y): 
         i = self.current_node
-        # position = self.position
-        # x = position[0]
-        # y = position[1]
+
         pos = np.array((x,y))
         x_i = self.nodes.coor[i][0]
         y_i = self.nodes.coor[i][1]
@@ -109,23 +154,8 @@ class B_mat:
 
         return phi
     
-    # Function for evaluating shape function at a point
-    def PHI(self, x, y):
-        order = 0
-        p = self.polynomial_basis(order, x, y)  
-        PHI = self.phi*p
 
-        i = self.current_node
-        x_i = self.nodes.coor[i][0]
-        y_i = self.nodes.coor[i][1]
-
-        dPHI_dx = (24*(x-x_i)**3)
-
-        dPHI_dy = (24*(y-y_i)**3)
-
-        return dPHI_dx, dPHI_dy
-
-
+    # Function for selecting the polynomial basis
     def polynomial_basis(self, order, x, y):
         if order==0:
             p = 1

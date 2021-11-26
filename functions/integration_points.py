@@ -15,9 +15,10 @@ class integration_points:
         self.elements = elements
         self.domain = domain
         self.nodes = nodes
-        self.degree = degree # degree x degree gauss points in a disk quadrant
+        self.degree = degree # degree times degree total gauss points in a disk quadrant
         self.num_points = degree**2 # number of gauss points per quadrant 
-        self.gauss_points = self.generate_points()
+        self.gauss_points, self.gauss_weights = self.generate_points()
+
         
     
     # Function which generates gaussian integration points.
@@ -25,10 +26,15 @@ class integration_points:
 
         x_i, w_i = np.polynomial.legendre.leggauss(self.degree)
         xv, yv = np.meshgrid(x_i, x_i)
+        wi, wj = np.meshgrid(w_i, w_i)
+
         self.gauss_grid = np.array(list(zip(xv.ravel(), yv.ravel())))
         self.gauss_grid = self.nodes.num*[self.gauss_grid]
         self.gauss_points = []
 
+        self.weight_grid = np.array(list(zip(wi.ravel(), wj.ravel())))
+        self.weight_grid = self.nodes.num*[self.weight_grid]
+        self.gauss_weights = []
 
         for i in range(0,self.nodes.num):
             current_x = self.nodes.coor[i,0]
@@ -41,12 +47,18 @@ class integration_points:
                 for j in range(0,self.num_points):
                     x = current_x - (0.5*self.elements.size) + (0.5*self.elements.size*self.gauss_grid[i-1][j,0])
                     y = current_y + (0.5*self.elements.size) + (0.5*self.elements.size*self.gauss_grid[i-1][j,1])
+                    
+                    wi = self.weight_grid[i-1][j,0]
+                    wj = self.weight_grid[i-1][j,1]
+
                     gauss_coor = [x, y]
+                    gauss_weight = [wi, wj]
+
                     self.gauss_points.append(gauss_coor)
-                
+                    self.gauss_weights.append(gauss_weight)
 
         self.gauss_points = np.array(self.gauss_points)
-
+        self.gauss_weights = np.array(self.gauss_weights)
 
         # Plotting integration points on the domain
         from matplotlib import pylab
@@ -90,7 +102,7 @@ class integration_points:
 
         
 
-        # return gauss_points
+        return self.gauss_points, self.gauss_weights
 
                 
     # def plot_points(self):
