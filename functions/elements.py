@@ -50,7 +50,7 @@ class elements:
     
         spheres=[]
         for i in range(0, len(self.nodes.coor)):
-            spheres.append(pylab.Circle((self.nodes.coor[i,0],self.nodes.coor[i,1]), self.size, fill=False, color='red'))
+            spheres.append(pylab.Circle((self.nodes.coor[i,0],self.nodes.coor[i,1]), self.size, fill=False, color='y'))
             ax.add_artist(spheres[i])
         
 

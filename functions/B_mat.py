@@ -45,12 +45,14 @@ class B_mat:
                       color = 'k')
         # ax.plot_surface(X, Y, phi, rstride=1, cstride=1,
         #         cmap='viridis', edgecolor='none')
-        ax.contour(X,Y,phi,50,cmap='cool')
+        ax.contour(X,Y,phi,50,cmap='viridis')
         ax.set_title(r'Weight function $\varphi$')
         ax.set_xlabel('x')
         ax.set_ylabel('y')
         ax.zaxis.set_rotate_label(False)
         ax.set_zlabel(r'$\varphi$', rotation = 0);
+        pylab.grid(False)
+        # pylab.axis('off')
 
         pylab.show()
         ################################################################################################
@@ -69,12 +71,14 @@ class B_mat:
                       color = 'k')
         # ax.plot_surface(X, Y, phi, rstride=1, cstride=1,
         #         cmap='viridis', edgecolor='none')
-        ax2.contour(X,Y,dPHI_dy,50,cmap='cool')
+        ax2.contour(X,Y,dPHI_dy,50,cmap='viridis')
         ax2.set_title(r'Shape function derivatives')
         ax2.set_xlabel('x')
         ax2.set_ylabel('y')
         ax2.zaxis.set_rotate_label(False)
         ax2.set_zlabel(r'$\frac{d\phi}{dx}$', rotation = 0);
+        # pylab.grid(False)
+        # pylab.axis('off')
 
         pylab.show()
 

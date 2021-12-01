@@ -12,7 +12,7 @@ class D_mat:
         self.material = material
         self.D = self.generate_D()
 
-        print(self.D)
+        # print(self.D)
 
     def generate_D(self):
         E = self.material.E
