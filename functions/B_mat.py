@@ -5,7 +5,9 @@
 # Maybe move shepard_PU to its own class entirely???
 # Make more efficient? Calculating derivatives currently takes ages...
 
+import math
 import numpy as np
+from numpy.lib import math
 from .domain import*
 
 class B_mat:
@@ -126,10 +128,11 @@ class B_mat:
         y_i = self.nodes.coor[i][1]
         pos_i = np.array((x_i, y_i))
 
-        s = np.linalg.norm(pos-pos_i)/self.elements.size
+        # s = abs(np.linalg.norm(pos-pos_i))/self.elements.size
+        s = math.hypot(x-x_i, y-y_i)/self.elements.size
 
         # Quartic spline function
-        if s<1:
+        if s<=1:
             W_i = 1 - 6*s**2 + 8*s**3 - 3*s**4
         else:
             W_i = 0
@@ -140,11 +143,11 @@ class B_mat:
             y_j = self.nodes.coor[j][1]
             pos_j = np.array((x_j,y_j))
             
-            s_j = np.linalg.norm(pos-pos_j)/self.elements.size
-           
-            # s_j = (np.sqrt((abs(x-x_j))**2 + (abs(y-y_j))**2))/self.elements.size
+            # s_j = np.linalg.norm(pos-pos_j)/self.elements.size
+            
+            s_j = math.hypot(x_i-x_j, y_i-y_j)/self.elements.size
 
-            if s_j<1:
+            if s_j<=1:
                 W_j.append(1 - 6*s_j**2 + 8*s_j**3 - 3*s_j**4)
             else:
                 W_j.append(0)

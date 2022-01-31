@@ -56,13 +56,16 @@ class K_mat:
         y_node = self.nodes.coor[int(I/2)][1]
         pos_node = np.array((x_node,y_node))
 
-        t = 1
+        t = 0.001
         # Generate the D matrix
-        my_material = material(E=200e9, v=0.3)
+        my_material = material(E=70e9, v=0)
         my_Dmat = D_mat(my_material)
         D = my_Dmat.D
 
-
+        k = np.zeros([2*len(self.polynomial_basis.value),2*len(self.polynomial_basis.value)])
+        x_J = self.nodes.coor[int(J/2)][0]
+        y_J = self.nodes.coor[int(J/2)][1]
+        pos_J = np.array((x_J,y_J))
         if I == J:
             k = np.zeros([2*len(self.polynomial_basis.value),2*len(self.polynomial_basis.value)])
             for gp in range(0,len(self.integration_points.gauss_points)):
@@ -84,10 +87,25 @@ class K_mat:
                         k = k + w_j * w_i * t * np.transpose(B_Im.value) @ D @ B_Jn.value
                 else: 
                     k = k
-        else:
-            k = np.zeros([2*len(self.polynomial_basis.value),2*len(self.polynomial_basis.value)])
+        else: #abs(np.linalg.norm(pos_J-pos_node)) <= 2*self.elements.size:
+            for gp in range(0,len(self.integration_points.gauss_points)):
+                x_gauss = self.integration_points.gauss_points[gp,0]
+                y_gauss = self.integration_points.gauss_points[gp,1]
+                pos_gauss = np.array((x_gauss,y_gauss))
 
-        
-        
+                w_i = self.integration_points.gauss_weights[gp,0]
+                w_j = self.integration_points.gauss_weights[gp,1]
+
+                # If gauss point lies in an overlap region
+                if np.linalg.norm(pos_gauss-pos_node) < self.elements.size and np.linalg.norm(pos_gauss-pos_J) < self.elements.size:
+                    B_Im = B_mat(self.domain, self.nodes, self.elements, x_gauss, y_gauss, int(I/2))
+
+                    for J in range(0, self.nodes.num):
+                        B_Jn = B_mat(self.domain, self.nodes, self.elements, x_gauss, y_gauss, int(J))
+              
+                        k = k + w_j * w_i * t * np.transpose(B_Im.value) @ D @ B_Jn.value
+                else: 
+                    k = k      
+
         return k
 

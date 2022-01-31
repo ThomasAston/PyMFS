@@ -1,6 +1,6 @@
 # meshLess_2Day v1
 # Author(s): Thomas Aston
-# Date updated: 01/12/2021 
+# Date updated: 02/12/2021 
 
 # This is the central file for solving problems by calling the various functions required by the meshLess solver.
 
@@ -10,7 +10,10 @@
 #
 
 from functions import *
+import time
 
+
+start = time.time()
 ##########################################################################
 # Set up the domain, select material
 ##########################################################################
@@ -33,7 +36,7 @@ my_elements = elements(my_nodes, my_domain, type='MFS', size=my_nodes.coor[1,0]-
 ##########################################################################
 # Impose boundary conditions on the nodes, apply prescribed forces
 ##########################################################################
-my_DoFs = apply_DoFs(my_nodes, BC = 'left fixed', load = [0, -10], location = [2,2])
+my_DoFs = apply_DoFs(my_nodes, BC = 'bottom fixed', load = [0, 10000], location = [1,2])
 
 ##########################################################################
 # Generate integration points 
@@ -46,8 +49,8 @@ my_intPoints = integration_points(my_domain, my_nodes, my_elements, degree=6)
 ##########################################################################
 my_basis = polynomial_basis(order=0)
 
-my_Bmat = B_mat(my_domain, my_nodes, my_elements, x=0.5, y=0.5, current_node = 4)
-# my_Bmat.example_plot()
+my_Bmat = B_mat(my_domain, my_nodes, my_elements, x=1, y=0, current_node = 4)
+my_Bmat.example_plot()
 
 my_Kmat = K_mat(my_domain, my_nodes, my_elements, my_intPoints, my_DoFs)
 
@@ -58,7 +61,10 @@ my_solution = solve(my_Kmat, my_DoFs)
 print(my_solution.u)
 print(my_solution.F)
 
+end = time.time()
+print('Time taken to solve: ',end-start)
 ##########################################################################
 # Post processing 
 ##########################################################################
-# print('Done')
+my_post = post(my_solution, my_domain, my_nodes, my_elements, my_intPoints)
+

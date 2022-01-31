@@ -36,9 +36,18 @@ class apply_DoFs:
                     # U_p.append(0)
                 else:
                     BC_flag[i,:] = [1,1]
+        elif self.BC == 'bottom fixed':
+            for i in range(0, self.nodes.num):
+                if self.nodes.coor[i,1] == 0:
+                    BC_flag[i,:] = [0,0]
+                    # DOF+=1
+                    # U_p.append(0)
+                else:
+                    BC_flag[i,:] = [1,1]
         
         BC_flag = np.ravel(BC_flag)
 
+        print(BC_flag)
         # Number the system DoFs, starting with free DoFs... 
         DoFs = np.zeros((len(BC_flag),1))
         q = []
@@ -72,14 +81,17 @@ class apply_DoFs:
         f = np.zeros((self.nodes.num*2, 1))
 
         order =self.order.astype(int)
+        print(self.load)
         
         for i in range(0, self.nodes.num*2, 2):
-            if self.nodes.coor[int(i/2),0] == self.location[0] and self.nodes.coor[int(i/2),1] == self.location[1]:
+            # if self.nodes.coor[int(i/2),0] == self.location[0] and self.nodes.coor[int(i/2),1] == self.location[1]:
+            if self.nodes.coor[int(i/2),1] == self.location[1]:
                 f[order[i]] = self.load[0] 
                 f[order[i]+1] = self.load[1]
             else:
                 f[order[i]] = 0
                 f[order[i]+1] = 0
 
+        print(f)
         # self.order
         return f

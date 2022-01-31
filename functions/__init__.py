@@ -9,3 +9,4 @@ from .polynomial_basis import*
 from .B_mat import*
 from .K_mat import*
 from .solve import *
+from .post import *
