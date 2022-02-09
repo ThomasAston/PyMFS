@@ -26,8 +26,8 @@ from matplotlib import pyplot as plt
 l = 1  # Domain length
 
 ### Discretisation ###
-N = 21   # Number of nodes 
-r = 0.3 # Sphere radius
+N = 6   # Number of nodes 
+r = 0.1 # Sphere radius
 x = np.linspace(0, l, N) # Generate nodes
 print('List of nodal coordinates: ',x)
 order = 2 # Number of terms in the local basis (= number of required shape functions)
@@ -37,7 +37,7 @@ u_s = 1 # Essential boundary at x = 0
 f_s = 2 # Natural boundary at x = 1
 
 ### Analytical displacement field ###
-resolution = 1001
+resolution = 1000
 dx = l/resolution
 X = np.linspace(0,1,resolution)
 u_analytical = []
@@ -115,23 +115,16 @@ for i in range(N):
         for m in range(order):
             for n in range(order):    
                 
-                if x[i]-r<0:
-                    x1 = 0
-                    x2 = x[i]+r
-                elif x[i]+r>l:
-                    x1 = x[i]-r
-                    x2 = l
-                else:
-                    x1 = x[i]-r
-                    x2 = x[i]+r
                 
-                x1 = round(x1,2)
-                x2 = round(x2,2)
-   
-                x1_loc = int(x1/l * (resolution-1))
-                x2_loc = int(x2/l * (resolution-1))
+                # # Loop from x1 to x2 to numerically integrate...
+                # for a in range(0, resolution):
+                #     if a == 0 or a==resolution:#(resolution/(N-1)):
+                #         f_x = dh_dx[i][m][a] * dh_dx[j][n][a]
+                #     else:
+                #         f_x = 2*dh_dx[i][m][a] * dh_dx[j][n][a]
 
-                K_nested[i][j][m][n] = np.trapz(dh_dx[i,m,x1_loc:x2_loc] * dh_dx[j,n,x1_loc:x2_loc], x=None, dx=dx)
+                K_nested[i][j][m][n] = np.trapz(dh_dx[i][m][:] * dh_dx[j][n][:], x=None, dx=dx)
+                
                 K_open[order*i:order+order*i,order*j:order+order*j] = K_nested[i,j,:,:]
 
 
@@ -147,30 +140,18 @@ KU_ImJn_open = np.zeros((N*order,N*order))
 for i in range(N):
     for m in range(order):
         
-        if x[i]-r<0:
-            x1 = 0
-            x2 = x[i]+r
-        elif x[i]+r>l:
-            x1 = x[i]-r
-            x2 = l
-        else:
-            x1 = x[i]-r
-            x2 = x[i]+r
-        
-        x1 = round(x1,2)
-        x2 = round(x2,2)
-
-        x1_loc = int(x1/l * (resolution-1))
-        x2_loc = int(x2/l * (resolution-1))
-
-        f_Im[i][m] = np.trapz(X[x1_loc:x2_loc]*h[i,m,x1_loc:x2_loc], x=None, dx=dx)
+        f_Im[i][m] = np.trapz(X[:]*h[i,m,:], x=None, dx=dx)
+        # else:
+        #     f_Im[i][m] = 0
 
         # Evaluate fHat_Im 
-        if x[i] + r > l: # sphere intersects neumann boundary
+        if i==N-1: # node is on neumann boundary
             fHat_Im[i][m] = f_s * h[i][m][resolution-1]
-        elif x[i] - r < 0: # sphere intersects dirichlet boundary
-            fU_Im = -u_s*dh_dx[i][m][0]
-            fHat_Im[i][m] =  -fU_Im
+        elif i==0: # node is on dirichlet boundary
+            
+            fU_Im = u_s*dh_dx[i][m][0]
+            # print(fU_Im)
+            fHat_Im[i][m] =  fU_Im
             
             for j in range(N):
                 for n in range(order):
@@ -179,53 +160,36 @@ for i in range(N):
         else: 
             fHat_Im[i][m] = 0
 
+
 ##############################################
 # SOLVE SYSTEM OF EQUATIONS
 ##############################################
 K_open = K_open-KU_ImJn_open
-
 f = f_Im + fHat_Im
-print(f)
+# f = x
 f = np.ravel(f)
 
-q = np.linalg.solve(K_open,f)
+K_ff = K_open[order:,order:]
+f_f = f[order:]
+K_fr = K_open[order:,0:order]
+if order == 2:
+    q_r = [u_s, 0]
 
-##############################################
-# REASSEMBLE DISPLACEMENT FIELD
-##############################################
-q = np.reshape(q, [N,2])
-print(q)
+F = f_f-(K_fr @ q_r)
+q_f = np.linalg.solve(K_ff,F)
+# print(q_f)
 
-# u = np.zeros([N,1])
+u_f=[]
+for i in range(0,len(q_f),2):
+    # print('q:',q_f[i])
+    # print('adding:',)
+    u_f.append(q_f[i]+q_f[i+1])
 
-# for i in range(N):
-#     print('---------------------------------------------------')
-#     print('Assembling nodal displacement of: ', i)
-#     for j in range(N):
-#         print('Contribution from: ', j)
-#         for n in range(order):
-#             print('Degree of freedom: ', n)
-            
-#             node_index = int(i*(resolution-1)/(N-1))
-#             print(X[node_index])
-#             print('h: ', h[j][n][node_index])
-#             print('q: ', q[j][n])
+# # u_f=[]
+# u_f = q_f[0::order]
+u = np.insert(u_f,0,u_s)
 
-#             u[i] += h[j][n][node_index]*q[j][n]
-#             print('u: ', u[i])
 
-u = np.zeros([resolution,1])
-
-for i in range(resolution):
-    # print('---------------------------------------------------')
-    # print('Assembling nodal displacement of: ', i)
-    for j in range(N):
-        # print('Contribution from: ', j)
-        for n in range(order):
-            u[i] += h[j][n][i]*q[j][n]
-  
-
-# print(u)
 ##############################################
 # PLOT RESULTS
 ##############################################
@@ -235,19 +199,16 @@ plt.rcParams["mathtext.fontset"] = "dejavuserif"
 plt.title('Shape functions')
 
 plt.plot(X,h[0,0,:], label='h_00')
-# plt.plot(X,dh_dx[0,0,:]*dh_dx[1,0,:], label='h_00')
 plt.plot(X,h[0,1,:], label='h_01')
 plt.plot(X,h[1,0,:], label='h_10')
-# plt.plot(X,dh_dx[3,1,:], label='h_10')
-
 plt.plot(X,h[1,1,:], label='h_11')
 plt.plot(X,h[2,0,:], label='h_20')
 # plt.plot(X,h[2,1,:], label='h_21')
-# plt.plot(X,h[3,0,:], label='h_30')
+plt.plot(X,h[3,0,:], label='h_30')
 # plt.plot(X,h[3,1,:], label='h_31')
 # plt.plot(X,h[4,0,:], label='h_40')
 # plt.plot(X,h[5,0,:], label='h_50')
-# plt.plot(X,sum_W_j, label='sum_W_j')
+plt.plot(X,sum_W_j, label='sum_W_j')
 
 
 plt.legend()
@@ -261,36 +222,10 @@ plt.rcParams["font.family"] = "serif"
 plt.rcParams["mathtext.fontset"] = "dejavuserif"
 plt.title('Axial bar deformation')
 plt.plot(X,u_analytical,label='Analytical')
-plt.scatter(x,u[0:resolution:int(resolution/(N-1))],color='r',label='MFS')
-# plt.plot(x,u,color='r')
+plt.scatter(x,u,color='r',label='MFS')
+plt.plot(x,u,color='r')
 plt.legend()
 plt.xlabel("x")
 plt.ylabel("u(x)")
 plt.show()
 
-error=[]
-for a in range(resolution):
-    error.append(u[a]-u_analytical[a])
-ax4 = plt.axes
-plt.rcParams["font.family"] = "serif"
-plt.rcParams["mathtext.fontset"] = "dejavuserif"
-plt.title('Deformation error')
-# plt.plot(X,u_analytical,label='Analytical')
-plt.plot(X,error,color='r',label='error')
-# plt.plot(x,u,color='r')
-plt.legend()
-plt.xlabel("x")
-plt.ylabel("absolute error")
-plt.show()
-
-# ax4 = plt.axes
-# plt.rcParams["font.family"] = "serif"
-# plt.rcParams["mathtext.fontset"] = "dejavuserif"
-# plt.title('Axial bar force')
-# # plt.plot(X,u_analytical,label='Analytical')
-# plt.scatter(x,f,color='r',label='MFS')
-# plt.plot(x,f,color='r')
-# plt.legend()
-# plt.xlabel("x")
-# plt.ylabel("f(x)")
-# plt.show()
