@@ -8,8 +8,7 @@
 import numpy as np
 from .polynomial_basis import *
 from .B_mat import *
-from .D_mat import *
-from .material import *
+from .C_mat import *
 from.apply_DoFs import *
 
 class K_mat:

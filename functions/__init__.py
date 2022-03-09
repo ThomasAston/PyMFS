@@ -1,12 +1,11 @@
 from .domain import*
 from .nodes import*
-from .material import*
-from .elements import*
 from .apply_DoFs import*
 from .integration_points import*
-from .D_mat import* 
+from .C_mat import* 
 from .polynomial_basis import*
 from .B_mat import*
 from .K_mat import*
 from .solve import *
 from .post import *
+from .pre_process import *
