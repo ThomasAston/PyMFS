@@ -6,7 +6,7 @@ Date updated: 08/03/2022
 PyMFS has been developed as part of the MEng final year individual project:
 'Develping a code for the method of finite spheres'.  
 
-This is the central file for PyMFS. 
+This is the central file for PyMFS... 
 
 This file should provide users with sufficient functionality to generate PyMFS 
 input files, then solve and analyse the results of the problem posed.  
