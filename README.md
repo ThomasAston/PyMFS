@@ -4,8 +4,8 @@
 
 # PyMFS
 
-<a href="https://github.com/younjames/trote3d/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=younjames/trote3d" />
+<a href="https://github.com/ThomasAston/PyMFS/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ThomasAston/PyMFS" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).
