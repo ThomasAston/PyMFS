@@ -14,10 +14,11 @@ from matplotlib.patches import PathPatch
 from matplotlib.patches import Path
 
 
-##########################################################################
-# Class for defining a 2D polygonal domain made up of n vertices following
-# a closed path...
-##########################################################################
+'''
+Class for defining a 2D polygonal domain made up of n vertices following
+a closed path...
+
+'''
 class domain:
     # Function which takes the vertices passed into the domain and
     # constructs a polygon from it. 
@@ -101,73 +102,33 @@ class domain:
             pylab.show()
 
 
-
-##########################################################################
-# Class for defining a 2D rectangle domain made up of 2 opposite corners
-##########################################################################
-# class rectangle(compile_vertices):
-
-#     # Function which takes vertices and nodes from rectangle_vertices and
-#     # node_list and passes them to the global domain class. 
-#     def __init__(self, point1=[0, 0], point2=[1, 1]):
-#         vertices = self.rectangle_vertices(point1,point2)
-#         domain.__init__(self, vertices)
-     
-
-#     # Function for obtaining vertices of rectangle. 
-#     def rectangle_vertices(self, point1, point2):
-#         vertices = np.zeros((4,2))
-#         vertices[0] = point1
-#         vertices[1] = [point2[0],point1[1]]
-#         vertices[2] = point2
-#         vertices[3] = [point1[0], point2[1]]
-
-#         return vertices
-
-
-##########################################################################
-# Class for defining a 2D circular domain defined by center and radius
-##########################################################################
-# def circle(domain):
-
-#     # Function which defines circle using vertices, the number of
-#     # which is controlled by the resolution parameter.
-#     # Vertices are then passed to global domain.
-#     def __init__(self, center=np.array([0,0]), radius=1.0, resolution=100):
-
-#         self.radius = radius
-#         self.center = center
-#         vertices = [[radius*np.sin(x)+center[0],radius*np.cos(x)+center[1]] 
-#                     for x in np.linspace(0,2*np.pi,resolution)[:-1]]
-#         domain.__init__(self, vertices)
-    
-#     @property
-#     def area(self):
-#         return np.pi*(self.radius**2)
-
-
-##########################################################################
-# Class for defining a straight edge in the domain, using start and end
-# points.
-##########################################################################
+'''
+Function for defining a straight edge in the domain, using start and end
+points.
+'''
 def straight_line(point1=[0, 0], point2=[1, 0]):
     vertices = [point1, point2]
     return vertices
 
-
+'''
+Function for defining a circle in the domain, using centre point
+and radius.
+'''
 def circle(center=np.array([0,0]), radius=1.0):
     resolution=100
-    vertices = [(radius*np.cos(x)+center[0],radius*np.sin(x)+center[1])
+    vertices = [[radius*np.cos(x)+center[0],radius*np.sin(x)+center[1]]
                 for x in np.linspace(0,2*np.pi,resolution)[:-1]]
     
     return vertices
 
-
+'''
+Function for defining a circular segment in the domain, using centre
+point, radius, and start and end angles relative to the horizontal axis
+passing through the centre point. Anticlockwise direction is positive.
+'''
 def circular_segment(center=np.array([0,0]), radius=1.0, start=0, end=np.pi/2):
     resolution=100
-    vertices = [(radius*np.cos(x)+center[0],radius*np.sin(x)+center[1])
+    vertices = [[radius*np.cos(x)+center[0],radius*np.sin(x)+center[1]]
                 for x in np.linspace(start,end,resolution)[:-1]]
     vertices.append([radius*np.cos(end)+center[0],radius*np.sin(end)+center[1]])
     return vertices
-
-# def remove_circle(center=np.array([0,0]), radius=1.0, start=0, end=np.pi/2)

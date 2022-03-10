@@ -41,7 +41,7 @@ edge1 = straight_line(point1=[5, 0], point2=[10, 0])
 edge2 = circular_segment(center=np.array([0,0]), radius=10, start=0, end=np.pi/2)
 edge3 = straight_line(point1=[0, 10], point2=[0, 5])
 edge4 = circular_segment(center=np.array([0,0]), radius=5, start=np.pi/2, end=0)
-my_edges = (edge1, edge2, edge3, edge4)
+my_edges = [edge1, edge2, edge3, edge4]
 
 '''
 Material removal:
@@ -82,8 +82,8 @@ Select the input file to be solved and send it to PyMFS solver:
 solve(job_ID='job1.mfs')
 
 end = time.time()
-time_taken = start-end
-print(time_taken)
+time_taken = end-start
+print('Time elapsed (solver): ',time_taken)
 
 '''
 ---------------------------------------------------------------------------------
