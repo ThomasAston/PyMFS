@@ -1,9 +1,12 @@
-# Let's generate the elasticity matrix (D) for 2D linear elasticity
+'''
+PyMFS elasticity matrix generation
+'''
 
-# To do list:
-# Currently only considers plain stress, consider other cases?
-# 
-#
+'''
+To-do list:
+
+- Shape function generation
+'''
 
 import numpy as np
 

@@ -73,7 +73,6 @@ def u_analytical(x,y):
 # GENERATE SHAPE FUNCTIONS
 ##############################################
 
-# phi = np.zeros((len(coor), 3, NX*NY))
 W_i = np.zeros((Nx, Ny, NX, NY))
 
 def shape_functions(node,point):

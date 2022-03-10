@@ -2,11 +2,9 @@
 PyMFS solver module
 '''
 
-
 '''
 To-do list:
 
-- Unpack input file to return properties
 - Shape function generation
 - Integration point generation
 - C matrix
@@ -16,18 +14,20 @@ To-do list:
 '''
 
 import numpy as np
+from input_data import*
+from K_mat import*
+from f_vec import*
 
 class solve:
     def __init__(self, job_ID):
-        self.input_file = job_ID
-        self.surfaces, self.node_coor, self.radius, self.mat_prop, self.BC, self.loads = self.unpack(self.input_file)
+    
+        input_data = input_data(job_ID)
+
+        self.K = K_mat(input_data)
+        self.f = f_vec(input_data)
 
 
-    def unpack(self):
-        open_file = open(self.input_file,'r')
 
-        
-        return 
 
 
 
