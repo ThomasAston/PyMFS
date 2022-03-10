@@ -41,7 +41,7 @@ filename = 'Tinput.tro'
 material = 'materials.json'
 ```
 ## To do
-- [ ] Complete conversion of Fortran 90 code to Python 3 and complete verification.
+- [ ] Complete solver for linear elasticity problems.
 
 ## Getting Involved
 For any suggestions, please [create a new issue](https://github.com/younjames/trote3d/issues).
