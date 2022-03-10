@@ -147,7 +147,7 @@ def integration_points(I,J,int_degree):
             if pointInDomain == True and math.hypot(x-node_x, y-node_y) < r:
                 gauss_points.append([x,y])
                 gauss_weights.append([weight_grid[a,0], weight_grid[a,1]])
-            else:
+            else:   
                 continue   
         # Quadrant 2
         for a in range(int_degree**2):

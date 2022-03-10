@@ -5,29 +5,25 @@ PyMFS elasticity matrix generation
 '''
 To-do list:
 
-- Shape function generation
+- 
 '''
 
 import numpy as np
 
-class D_mat:
-    def __init__(self, material):
-        self.material = material
-        self.D = self.generate_D()
+def C(input_data):
 
-        # print(self.D)
+    E = input_data.mat_prop[0]
+    nu = input_data.mat_prop[1]
 
-    def generate_D(self):
-        E = self.material.E
-        v = self.material.v
+    c_11 = E/(1-nu**2)
+    c_12 = (E*nu)/(1-nu**2)
+    c_33 = E/(2*(1+nu))
 
-        d11 = (E)/(1-v**2)
-        d12 = (E*v)/(1-v**2)
-        d33 = E/(2*(1+v))
+    C = [[c_11, c_12, 0],\
+         [c_12, c_11, 0],\
+         [0   , 0   , c_33]]
 
-        D = np.array([[d11, d12, 0],
-                     [d12, d11, 0],
-                     [0, 0, d33]])
+    return C
 
-        return D
+
 

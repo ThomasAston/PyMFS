@@ -15,25 +15,12 @@ from scipy.spatial import cKDTree
 class nodes:
     def __init__(self, domain, nx, ny, dc = None, method = 'Regular'):
         self.domain = domain
-
-        # If user chooses desired number of nodes
-        # if N:
-        #     self.N = N
-        #     self.dc = np.sqrt(self.domain.area)/(np.sqrt(N)-1)
-        # # Else if they choose desired nodal spacing
-        # elif dc:
-        #     self.dc = dc
-        #     self.N = self.domain.area/dc**2 + 2*self.domain.area/dc + 1
-        # else:
-        #     raise ZeroDivisionError
-        
-        # self.coor = np.zeros([self.N,2])
         self.nx = nx
         self.ny = ny
+
         if method == 'Regular':
             self.distribute_nodes_reg(nx,ny)
         
-        # self.tree = cKDTree(self.coor)
 
     # Function for distributing nodes over domain with regular spacing
     def distribute_nodes_reg(self,nx,ny):
@@ -44,7 +31,6 @@ class nodes:
         
         x = np.linspace(bounds[0,0], bounds[1,0]-0.001, nx)
         y = np.linspace(bounds[0,1]+0.001, bounds[1,1], ny)
-        # xv, yv = np.meshgrid(x, y)
         self.coor=[]
         for i in range(len(x)):
             for j in range(len(y)):

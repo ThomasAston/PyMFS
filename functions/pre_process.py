@@ -6,6 +6,7 @@ PyMFS pre-processing module
 To-do list:
 
 - Speed up using blitting
+- Add identifier for if problem is plane stress or plane strain?
 '''
 
 import numpy as np
@@ -172,33 +173,63 @@ class pre_process:
 
         ### Interactivity ###
         self.u_sx = []
+        self.u_sx_flag = []
         self.u_sy = []
+        self.u_sy_flag = []
         self.u_s_edges = []
+
         def applyBC(expression):
-            self.u_sx.append(BCBox2.text)
-            self.u_sy.append(BCBox1.text)
+            if BCBox2.text:
+                self.u_sx.append(float(BCBox2.text))
+                self.u_sx_flag.append(0)
+            else:
+                self.u_sx.append(0)
+                self.u_sx_flag.append(1)
+
+            if BCBox1.text:
+                self.u_sy.append(float(BCBox1.text))
+                self.u_sy_flag.append(0)
+            else:
+                self.u_sy.append(0)
+                self.u_sy_flag.append(1)           
+
+            
             active_edges = []
             status = EDGEcheck.get_status()
             for i in range(len(status)):
                 if status[i]==True:
-                    active_edges.append(EDGE_labels[i])
+                    active_edges.append(i)
             self.u_s_edges.append(active_edges)
 
-            return self.u_sx, self.u_sy, self.u_s_edges
+            return self.u_sx, self.u_sy, self.u_sx_flag, self.u_sy_flag, self.u_s_edges
         
         BCbutton.on_clicked(applyBC)
 
         self.f_sx = []
+        self.f_sx_flag = []
         self.f_sy = []
+        self.f_sy_flag = []
         self.f_s_edges = []
         def applyLOAD(expression):
-            self.f_sx.append(LOADBox2.text)
-            self.f_sy.append(LOADBox1.text)
+            if LOADBox2.text:
+                self.f_sx.append(float(LOADBox2.text))
+                self.f_sx_flag.append(0)
+            else:
+                self.f_sx.append(0)
+                self.f_sx_flag.append(1)
+
+            if LOADBox1.text:
+                self.f_sy.append(float(LOADBox1.text))
+                self.f_sy_flag.append(0)
+            else:
+                self.f_sy.append(0)
+                self.f_sy_flag.append(1)   
+            
             active_edges = []
             status = EDGEcheck.get_status()
             for i in range(len(status)):
                 if status[i]==True:
-                    active_edges.append(EDGE_labels[i])
+                    active_edges.append(i)
             self.f_s_edges.append(active_edges)
 
             return self.f_sx, self.f_sy, self.f_s_edges
@@ -212,8 +243,8 @@ class pre_process:
 
         pylab.show()
 
-        self.u_s = [self.u_sx, self.u_sy, self.u_s_edges]
-        self.f_s = [self.f_sx, self.f_sy, self.f_s_edges]
+        self.u_s = [self.u_sx, self.u_sy, self.u_sx_flag, self.u_sy_flag, self.u_s_edges]
+        self.f_s = [self.f_sx, self.f_sy, self.f_sx_flag, self.f_sy_flag, self.f_s_edges]
         self.E = MATBox3.text
         self.nu = MATBox2.text
         self.t = MATBox1.text
@@ -228,8 +259,11 @@ class pre_process:
         lines = [
                  f"# Job: {self.job_ID}.mfs",\
                  '',\
-                 "# Surfaces", \
+                 "# External surfaces", \
                  str(self.domain.edges), \
+                 '',\
+                 "# Internal surfaces", \
+                 str(self.domain.subedges), \
                  '',\
                  "# Nodal coordinates", \
                  str(self.nodes.coor.tolist()), \
@@ -240,10 +274,10 @@ class pre_process:
                  "# Physical properties", \
                  str(self.PhysicalProperties), \
                  '',\
-                 "# Boundary conditions", \
+                 "# Prescribed displacements [[u_sx], [u_sy], [u_sx_flag], [u_sy_flag], [surfaces]]", \
                  str(self.u_s), \
                  '', \
-                 "# Loads", \
+                 "# Prescribed loads [[f_sx], [f_sy], [f_sx_flag], [f_sy_flag], [surfaces]]", \
                  str(self.f_s)]
 
         job = f"{self.job_ID}.mfs"
