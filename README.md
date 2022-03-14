@@ -34,9 +34,35 @@ $ python3 PyMFS.py
 The file that is run and the materials which are used are currently set in PyMFS.py by the following lines
 
 ```
-# Input file and materials file
-filename = 'Tinput.tro'
-material = 'materials.json'
+edge1 = straight_line(point1=[0,0], point2=[2,0])
+edge2 = straight_line(point1=[2,0], point2=[2,2])
+edge3 = straight_line(point1=[2,2], point2=[0,2])
+edge4 = straight_line(point1=[0,2], point2=[0,0])
+my_edges = [edge1, edge2, edge3, edge4]
+# '''
+# Material removal:
+# '''
+# # subedge1 = circle(center=np.array([7,2]),radius=1) 
+# # subedge2 = circle(center=np.array([2,7]),radius=1) 
+# # my_subedges = [subedge1, subedge2]
+my_subedges = []
+
+'''
+Generate a domain object from the given edges:
+'''
+my_domain = domain(my_edges, my_subedges)
+
+'''
+Discretise the domain by selecting number of nodes.
+Note, at present sphere sizing is uniform only.
+'''
+my_nodes = nodes(my_domain, nx=3, ny=3, method='Regular')
+
+'''
+Enter the pre-processing UI to view geometry, set boundary conditions and
+submit the job for solving:
+'''
+pre_process(my_domain, my_nodes, job_ID='job1')
 ```
 ## To do
 - [ ] Complete solver for linear elasticity problems.
