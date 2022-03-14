@@ -343,7 +343,7 @@ for I in range(Ntot):
                 point_xplus = (xplus,point[1])
                 
                 hI_xplus = shape_functions(I,point_xplus)
-
+                
                 dhI_dx = (hI_xplus-h_I)/delta
                 u_s = 8*np.cos(np.pi*point[1])
                 # fHat_Im[I][m] -= ((x2-x1)/2)*((y2-y1)/2)*wj*wi*u_s*dhI_dx[m]

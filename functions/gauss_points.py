@@ -42,16 +42,25 @@ class gauss_points:
         self.int_degree=6
         
         '''Generate points for current node I, contributing node J'''
-        self.points, self.weights = self.generate()
-
+        self.points, self.weights,self.y1,self.y2 = self.generate()
+        
+        
         '''Test plot'''
         # fig,ax=pylab.subplots()
         # if self.points:
         #     pylab.scatter(np.array(self.points)[:,0], np.array(self.points)[:,1])
 
         # x,y = zip(*self.polygon.xy)
-        # line = Line2D(x,y,linestyle='-')
+        # line = Line2D(x,y,linestyle='-', color='k')
+        # ax.set_xlim((min(x)-0.1*max(x), 1.1*max(x)))
+        # ax.set_ylim((min(y)-0.1*max(y), 1.1*max(y)))
         # ax.add_line(line)
+        # ax.set_aspect(aspect= 1)
+        
+        # sphereI = pylab.Circle((np.array(self.input_data.node_coor)[I,0],np.array(self.input_data.node_coor)[I,1]), self.input_data.radius, fill=False, color='c')
+        # sphereJ = pylab.Circle((np.array(self.input_data.node_coor)[J,0],np.array(self.input_data.node_coor)[J,1]), self.input_data.radius, fill=False, color='c')
+        # ax.add_patch(sphereI)
+        # ax.add_patch(sphereJ)
         # pylab.show()
 
 
@@ -75,6 +84,9 @@ class gauss_points:
         weight_grid = np.array(list(zip(wi.ravel(), wj.ravel())))
         points = []
         weights = []
+        
+        y1 = max(0,node_y-r, contrib_y-r)
+        y2 = min(2,node_y+r, contrib_y+r)
         
         '''If I==J we are directly integrating a sphere'''
         if self.I==self.J:
@@ -221,4 +233,4 @@ class gauss_points:
                         else:
                             continue
 
-        return points, weights
+        return points, weights, y1, y2

@@ -389,7 +389,7 @@ for I in range(Ntot):
         elif coor[I,0] + r > lx/2: # sphere intersects Dirichlet boundary
             
             gauss_points,gauss_weights,y1,y2 = boundary_integration_points(I,I,int_degree=6)
-
+            
             for counter in range(len(gauss_points)):
                 point = (lx/2, gauss_points[counter])
                 h_I = shape_functions(I,point)

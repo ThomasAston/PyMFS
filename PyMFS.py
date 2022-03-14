@@ -38,17 +38,22 @@ For a detailed explanation please consult the PyMFS user guide.
 Material addition:
 '''
 # edge1 = straight_line(point1=[5, 0], point2=[10, 0])
-# edge2 = circular_segment(center=np.array([0,0]), radius=10, start=0, end=np.pi/2)
-# edge3 = straight_line(point1=[0, 10], point2=[0, 5])
-# edge4 = circular_segment(center=np.array([0,0]), radius=5, start=np.pi/2, end=0)
-# my_edges = [edge1, edge2, edge3, edge4]
+# # edge2 = circular_segment(center=np.array([0,0]), radius=10, start=0, end=np.pi/2)
+# # edge3 = straight_line(point1=[0, 10], point2=[0, 5])
+# # edge4 = circular_segment(center=np.array([0,0]), radius=5, start=np.pi/2, end=0)
+# # my_edges = [edge1, edge2, edge3, edge4]
 
-# '''
-# Material removal:
-# '''
-# # subedge1 = circle(center=np.array([7,2]),radius=1) 
-# # subedge2 = circle(center=np.array([2,7]),radius=1) 
-# # my_subedges = [subedge1, subedge2]
+# edge1 = straight_line(point1=[0,0], point2=[2,0])
+# edge2 = straight_line(point1=[2,0], point2=[2,2])
+# edge3 = straight_line(point1=[2,2], point2=[0,2])
+# edge4 = straight_line(point1=[0,2], point2=[0,0])
+# my_edges = [edge1, edge2, edge3, edge4]
+# # '''
+# # Material removal:
+# # '''
+# # # subedge1 = circle(center=np.array([7,2]),radius=1) 
+# # # subedge2 = circle(center=np.array([2,7]),radius=1) 
+# # # my_subedges = [subedge1, subedge2]
 # my_subedges = []
 
 # '''
@@ -60,7 +65,7 @@ Material addition:
 # Discretise the domain by selecting number of nodes.
 # Note, at present sphere sizing is uniform only.
 # '''
-# my_nodes = nodes(my_domain, nx=5, ny=5, method='Regular')
+# my_nodes = nodes(my_domain, nx=3, ny=3, method='Regular')
 
 # '''
 # Enter the pre-processing UI to view geometry, set boundary conditions and
@@ -85,12 +90,13 @@ end = time.time()
 time_taken = end-start
 print('Time elapsed (solver): ',time_taken)
 
+
 '''
 ---------------------------------------------------------------------------------
 ------------------------ 3. Post-processing -------------------------------------
 ---------------------------------------------------------------------------------
 '''
 '''
-Pass solution bject into post-processing module. 
+Pass solution object into post-processing module. 
 '''
-# post_processing(solution)
+post_process(solution)

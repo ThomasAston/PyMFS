@@ -17,7 +17,7 @@ class input_data:
         self.input_file = job_ID
         self.external_surfaces, self.internal_surfaces, self.node_coor, \
             self.radius, self.mat_prop, self.BC, self.loads = self.unpack()
-        sphere_types = self.sphere_types()
+        # sphere_types = self.sphere_types()
         # print(sphere_types)
 
     '''

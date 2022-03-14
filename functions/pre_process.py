@@ -72,7 +72,7 @@ class pre_process:
         ax.set_ylim((min(y)-0.1*max(y), 1.1*max(y)))
         ax.grid(True)
         ax.set_aspect(aspect= 1)
-
+        
         pts = pylab.scatter(self.nodes.coor[:,0], 
                     self.nodes.coor[:,1],
                     s = 4,

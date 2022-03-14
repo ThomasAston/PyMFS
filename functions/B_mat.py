@@ -9,11 +9,10 @@ To-do list:
 '''
 
 from functions.shape_functions import shape_functions
-
+import numpy as np
 
 class B:
     def __init__(self, node_num, DOF, gauss_point, input_data):
-        print('Generating B matrix')
         self.node_num = node_num
         self.DOF = DOF
         self.point = gauss_point
@@ -39,8 +38,8 @@ class B:
         dh_dx = (h_xplus-h)/delta
         dh_dy = (h_yplus-h)/delta
 
-        B_mat = [[dh_dx, 0], \
-                 [0, dh_dy], \
-                 [dh_dy, dh_dx]]
+        B_mat = np.array([[dh_dx, 0], \
+                          [0, dh_dy], \
+                          [dh_dy, dh_dx]])
 
         return B_mat
