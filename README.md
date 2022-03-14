@@ -42,6 +42,6 @@ material = 'materials.json'
 - [ ] Complete solver for linear elasticity problems.
 
 ## Getting Involved
-For any suggestions, please [create a new issue](https://github.com/younjames/trote3d/issues).
+For any suggestions, please [create a new issue](https://github.com/younjames/PyMFS/issues).
 
 ## Citations
