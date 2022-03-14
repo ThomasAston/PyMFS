@@ -1,6 +1,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) 
-[![Build Status - GitHub](https://github.com/ThomasAston/PyMFS/workflows/pytesting/badge.svg)](https://github.com/ThomasAston/PyMFS/actions/workflows/pytesting.yml)
-[![codecov](https://codecov.io/gh/ThomasAston/PyMFS/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/ThomasAston/PyMFS)
+<>[![Build Status - GitHub](https://github.com/ThomasAston/PyMFS/workflows/pytesting/badge.svg)](https://github.com/ThomasAston/PyMFS/actions/workflows/pytesting.yml)
+<>[![codecov](https://codecov.io/gh/ThomasAston/PyMFS/branch/master/graph/badge.svg?token=FOE3NBS07X)](https://codecov.io/gh/ThomasAston/PyMFS)
 
 # PyMFS
 
