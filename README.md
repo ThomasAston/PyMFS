@@ -45,3 +45,5 @@ material = 'materials.json'
 For any suggestions, please [create a new issue](https://github.com/ThomasAston/PyMFS/issues).
 
 ## Citations
+1. De, S., Bathe, K. The method of finite spheres. Computational Mechanics 25, 329–345 (2000). https://doi.org/10.1007/s004660050481
+
