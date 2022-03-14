@@ -17,7 +17,7 @@ Made with [contrib.rocks](https://contrib.rocks).
 
 
 ## About
-PyMFS is a Python implementation of the method of finite spheres. The method of finite spheres (MFS) is a _truly_ meshless numerical method developed by Suvran De and Klaus-Jürgen Bathe [1]. The MFS has here been implemented in the first open-source code which adopts the method.
+PyMFS is a Python implementation of the method of finite spheres. The method of finite spheres (MFS) is a _truly_ meshless numerical method developed by Suvran De and Klaus-Jürgen Bathe [[1]]. The MFS has here been implemented in the first open-source code which adopts the method.
 	
 ## Technologies
 Project is created with:
