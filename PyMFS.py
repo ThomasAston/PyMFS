@@ -71,7 +71,7 @@ Material addition:
 # Enter the pre-processing UI to view geometry, set boundary conditions and
 # submit the job for solving:
 # '''
-# pre_process(my_domain, my_nodes, job_ID='job1')
+# pre_process(my_domain, my_nodes, job_ID='BiUnitSquare')
 
 
 '''
@@ -84,7 +84,7 @@ start = time.time()
 '''
 Select the input file to be solved and send it to PyMFS solver:
 '''
-solution = solve(job_ID='job1.mfs')
+solution = solve(job_ID='BiUnitSquare.mfs')
 
 end = time.time()
 time_taken = end-start

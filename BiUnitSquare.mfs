@@ -1,4 +1,4 @@
-# Job: job1.mfs
+# Job: BiUnitSquare.mfs
 
 # External surfaces
 [[[0, 0], [2, 0]], [[2, 0], [2, 2]], [[2, 2], [0, 2]], [[0, 2], [0, 0]]]
@@ -16,7 +16,7 @@
 [100.0, 0.3, 1.0]
 
 # Prescribed displacements [[u_sx], [u_sy], [u_sx_flag], [u_sy_flag], [surfaces]]
-[[], [], [], [], []]
+[[0.0], [0.0], [0], [0], [[3]]]
 
 # Prescribed loads [[f_sx], [f_sy], [f_sx_flag], [f_sy_flag], [surfaces]]
 [[10.0], [0.0], [0], [0], [[1]]]

@@ -6,6 +6,7 @@ PyMFS gauss point generation
 To-do list:
 
 - This is currently extremely slow, figure out how to make faster.
+- Boundary integration should be handled differently???
 '''
 
 import numpy as np
