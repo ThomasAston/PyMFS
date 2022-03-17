@@ -66,6 +66,7 @@ pre_process(my_domain, my_nodes, job_ID='job1')
 ```
 ## To do
 - [ ] Complete solver for linear elasticity problems.
+- [ ] Add tests
 
 ## Getting Involved
 For any suggestions, please [create a new issue](https://github.com/ThomasAston/PyMFS/issues).
