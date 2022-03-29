@@ -39,7 +39,7 @@ class system_variables:
         Ndim = 2 # Number of physical dimensions of problem domain.
         
         K = np.zeros((Ntot*Ndof*Ndim,Ntot*Ndof*Ndim))
-        f = np.zeros((Ntot*Ndof*Ndim))
+        f = np.zeros((Ntot*Ndim,Ndof))
     
         '''
         Loop over nodes I and J (direct spheres and overlap regions)
@@ -54,7 +54,7 @@ class system_variables:
             for J in range(Ntot):   
                 K_ImJn = K_mat(I,J,self).mat
                 K[Ndim*Ndof*I:Ndim*Ndof+Ndim*Ndof*I,Ndim*Ndof*J:Ndim*Ndof+Ndim*Ndof*J] = K_ImJn
-
+        
         '''
         Loop over nodes I (direct spheres only) and evaluate force 
         vector components.   
@@ -63,8 +63,7 @@ class system_variables:
         
         # for I in range(Ntot):
             
-        
-        
+    
         #         '''
         #         Generate gauss points and weights for current node
         #         and contributing node.

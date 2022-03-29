@@ -106,6 +106,7 @@ def shape_functions(node,point):
     h[0] = phi_i
     h[1] = phi_i*(point_x-xi)/r
     h[2] = phi_i*(point_y-yi)/r
+    # h[3] = phi_i*(point_x-xi)/r*(point_y-yi)/r
 
     return h
 

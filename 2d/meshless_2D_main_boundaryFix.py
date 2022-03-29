@@ -35,8 +35,8 @@ vertices = np.array([[-lx/2,-lx/2],[-lx/2,lx/2],[lx/2,lx/2],[lx/2,-lx/2]])
 poly = Polygon(vertices)                                            
 
 ### Discretisation ###
-Nx = 3  # number of nodes in x-direction 
-Ny = 3 # number of nodes in y-direction
+Nx = 6  # number of nodes in x-direction 
+Ny = 6 # number of nodes in y-direction
 Ntot = Nx*Ny # total number of nodes
 
 x = np.linspace(-lx/2, lx/2, Nx) # initialise x coords
@@ -106,6 +106,7 @@ def shape_functions(node,point):
     h[0] = phi_i
     h[1] = phi_i*(point_x-xi)/r
     h[2] = phi_i*(point_y-yi)/r
+    # h[3] = phi_i*(point_x-xi)/r*(point_y-yi)/r
 
     return h
 
