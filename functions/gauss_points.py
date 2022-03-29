@@ -45,24 +45,46 @@ class gauss_points:
         '''Generate points for current node I, contributing node J'''
         self.points, self.weights,self.y1,self.y2 = self.generate()
         
+        pylab.rc('text', usetex=True)
+        pylab.rc('text.latex', preamble=r'\usepackage{cmbright}')
+        
         
         '''Test plot'''
-        # fig,ax=pylab.subplots()
-        # if self.points:
-        #     pylab.scatter(np.array(self.points)[:,0], np.array(self.points)[:,1])
+        fig,ax=pylab.subplots()
 
-        # x,y = zip(*self.polygon.xy)
-        # line = Line2D(x,y,linestyle='-', color='k')
-        # ax.set_xlim((min(x)-0.1*max(x), 1.1*max(x)))
-        # ax.set_ylim((min(y)-0.1*max(y), 1.1*max(y)))
-        # ax.add_line(line)
-        # ax.set_aspect(aspect= 1)
+        radius = 1
+        center = [0,0]
+        start = 0 
+        end = np.pi/2
+        resolution=100
+        vertices = [[radius*np.cos(x)+center[0],radius*np.sin(x)+center[1]]
+                for x in np.linspace(start,end,resolution)[:-1]]
+        vertices.append([radius*np.cos(end)+center[0],radius*np.sin(end)+center[1]])
+        vertices.append([0,0])
+        polygon = Polygon(vertices, facecolor=(0,0.541176,0.541176,0.3))
+        ax.add_patch(polygon) 
         
-        # sphereI = pylab.Circle((np.array(self.input_data.node_coor)[I,0],np.array(self.input_data.node_coor)[I,1]), self.input_data.radius, fill=False, color='c')
-        # sphereJ = pylab.Circle((np.array(self.input_data.node_coor)[J,0],np.array(self.input_data.node_coor)[J,1]), self.input_data.radius, fill=False, color='c')
-        # ax.add_patch(sphereI)
-        # ax.add_patch(sphereJ)
-        # pylab.show()
+        if self.points:
+            pylab.scatter(np.array(self.points)[:,0], np.array(self.points)[:,1], s=25, color = [(0,0.541176,0.541176)])
+        
+        pts = pylab.scatter(np.array(self.input_data.node_coor)[:,0], 
+                            np.array(self.input_data.node_coor)[:,1],
+                            s = 25,
+                            color = 'k')
+
+        x,y = zip(*self.polygon.xy)
+        line = Line2D(x,y,linestyle='-', color='k', linewidth=1)
+        ax.set_xlim((min(x)-0.1*max(x), 1.1*max(x)))
+        ax.set_ylim((min(y)-0.1*max(y), 1.1*max(y)))
+        ax.add_line(line)
+        ax.set_aspect(aspect= 1)
+        
+        sphereI = pylab.Circle((np.array(self.input_data.node_coor)[I,0],np.array(self.input_data.node_coor)[I,1]), self.input_data.radius, fill=False, color=(0.6627,0.6627,0.6627))
+        sphereJ = pylab.Circle((np.array(self.input_data.node_coor)[J,0],np.array(self.input_data.node_coor)[J,1]), self.input_data.radius, fill=False, color=(0.6627,0.6627,0.6627))
+        ax.add_patch(sphereI)
+        ax.add_patch(sphereJ)
+
+        pylab.show()
 
 
     '''
