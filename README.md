@@ -1,4 +1,8 @@
+[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) 
+[![Github all releases](https://img.shields.io/github/downloads/ThomasAston/PyMFS/total.svg)](https://GitHub.com/ThomasAston/PyMFS/releases/)
+[![DOI:TBC](https://zenodo.org/badge/DOI/TBC.svg)]()
 
 # PyMFS
 
