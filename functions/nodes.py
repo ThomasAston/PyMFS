@@ -29,8 +29,8 @@ class nodes:
         nx = int(nx)
         ny = int(ny)
         
-        x = np.linspace(bounds[0,0], bounds[1,0]-0.001, nx)
-        y = np.linspace(bounds[0,1]+0.001, bounds[1,1], ny)
+        x = np.linspace(bounds[0,0]+0.0000001, bounds[1,0]-0.0000001, nx)
+        y = np.linspace(bounds[0,1]+0.0000001, bounds[1,1]-0.0000001, ny)
         self.coor=[]
         for i in range(len(x)):
             for j in range(len(y)):

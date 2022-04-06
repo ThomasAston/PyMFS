@@ -38,6 +38,7 @@ class pre_process:
         fig, ax = pylab.subplots()
         fig.canvas.manager.set_window_title('PyMFS pre-processing') 
         self.domain.polygon.set_alpha(0.3)
+        self.domain.polygon.set_color((0,0.541176,0.541176))
         x, y = zip(*self.domain.polygon.xy)
         
         ### Plot outlines and add patches ###
@@ -81,7 +82,7 @@ class pre_process:
         spheres=[]
         self.size = abs(self.nodes.coor[0,1] - self.nodes.coor[1,1])
         for i in range(0, len(self.nodes.coor)):
-            spheres.append(pylab.Circle((self.nodes.coor[i,0],self.nodes.coor[i,1]), self.size, fill=False, color='c'))
+            spheres.append(pylab.Circle((self.nodes.coor[i,0],self.nodes.coor[i,1]), self.size, fill=False, color=(0.6627,0.6627,0.6627)))
             ax.add_artist(spheres[i])
 
         ### Maximise window ###

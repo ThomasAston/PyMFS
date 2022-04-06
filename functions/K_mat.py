@@ -14,7 +14,8 @@ from .gauss_points import *
 from .B_mat import *
 from .C_mat import *
 from .direction_cosines import*
-
+from .boundary_intpoints import*
+from shapely.geometry import LineString, Point
 
 class K_mat:
     def __init__(self, I, J, system_variables):
@@ -40,11 +41,16 @@ class K_mat:
         J = self.J
         C = self.C
         input_data = self.input_data
-        Ndof = 3
+        surfaces = input_data.external_surfaces
+        surfaces += input_data.internal_surfaces
+        Ndof = 4
         Ndim = 2
         gauss = gauss_points(I,J,input_data)
         K_ImJn_nested = np.zeros((Ndof,Ndof,Ndim,Ndim)) # Nested version of K
         K_ImJn = np.zeros((Ndof*Ndim, Ndof*Ndim)) # Un-nested version of K
+        KU_ImJn_nested = np.zeros((Ndof,Ndof,Ndim,Ndim)) # Nested version of DIRICHLET K
+        KU_ImJn = np.zeros((Ndof*Ndim, Ndof*Ndim)) # Un-nested version of DIRICHLET K
+        dirichlet_count = 0
 
         '''
         Loop over DoFs
@@ -59,7 +65,7 @@ class K_mat:
                     continue
                 else:
                     '''
-                    Otherwise, we must... ASSEMBLE STIFFNESS MATRIX!
+                    Otherwise, we must... ASSEMBLE STIFFNESS MATRIX.
                     Evaluate stiffness terms by integrating over the
                     integration points.
                     '''
@@ -76,6 +82,61 @@ class K_mat:
 
                         K_ImJn_nested[m,n] += (dx/2)*(dx/2)*wj*wi*np.transpose(B_Im) @ C @ B_Jn
                         K_ImJn[m*2:m*2+2, n*2:n*2+2] = K_ImJn_nested[m,n]
+                    '''
+                    Loop over surfaces with prescribed displacements
+                    '''
+                    for surface_number in input_data.BC[4]:
+                        surf = surfaces[surface_number[0]]     # read current surface
+                        surface = LineString(surf)             # create surface object
+                        coor = Point(input_data.node_coor[I])  # create point object from node
+                        dist = coor.distance(surface)          # distance from node to surface
 
+                        u_s = input_data.loads[0][dirichlet_count]
+                        v_s = input_data.loads[1][dirichlet_count]
+                        u_s = np.array([u_s, v_s])
+                        
+                        '''
+                        Does current sphere intersect a Dirichlet boundary?
+                        '''
+                        if dist < input_data.radius:            
+                            '''
+                            If yes, loop over DoFs for current node,  
+                            then move along the surface.
+                            '''
+
+                            '''
+                            Loop over boundary integration points
+                            '''
+                            # integration_points, integration_weights, t1,t2 = boundary_intpoints(I,I,surf,input_data)
+                            integration_points,integration_weights, t1, t2, type = boundary_intpoints(I,I,surf,input_data)
+                            for counter, point in enumerate(integration_points):
+                                wj = integration_weights[counter]
+                                # point = (np.array(surf)[0,0],integration_points[counter])
+                                # point = integration_points[counter]
+
+                                B_Im = B(I,m,point,input_data).mat
+                                B_Jn = B(J,n,point,input_data).mat
+                                h_Im = shape_functions(I,m,point,input_data)
+                                H_Im = np.array([[h_Im, 0],\
+                                                 [0, h_Im]])
+                                h_Jn = shape_functions(J,n,point,input_data)
+                                H_Jn = np.array([[h_Jn, 0],\
+                                                 [0, h_Jn]])                                        
+                                N = direction_cosines(surf)
+                                '''
+                                1D Gaussian product rule
+                                '''
+                                KU_ImJn_nested[m,n] += wj*(H_Im @ N @ self.C @ B_Jn + np.transpose(B_Im) @ self.C @ np.transpose(N) @ H_Jn)
+                                # integrand = H_Im @ N @ self.C @ B_Jn + np.transpose(B_Im) @ self.C @ np.transpose(N) @ H_Jn
+                                # if type=='Horizontal':
+                                #     KU_ImJn_nested[m,n] = np.trapz(integrand,x=t_int)
+                                # elif type=='Vertical':
+                                #     KU_ImJn_nested[m,n] = np.trapz(integrand,x=t_int)
+
+                                KU_ImJn[m*2:m*2+2, n*2:n*2+2] = KU_ImJn_nested[m,n]
+                            
+                            # dirichlet_count += 1
         
-        return K_ImJn
+        # K_ImJn = K_ImJn + KU_ImJn
+
+        return K_ImJn, KU_ImJn

@@ -26,7 +26,7 @@ def shape_functions(node_num, DOF, point, input_data):
     y_point = point[1]
 
     s = math.hypot(x_point-x_i, y_point-y_i)/r
-
+    
     if s<=1:
         W_i = 1-6*s**2+8*s**3-3*s**4
     else:
@@ -51,6 +51,8 @@ def shape_functions(node_num, DOF, point, input_data):
         h = phi_i*(x_point-x_i)/r
     elif DOF == 2:
         h = phi_i*(y_point-y_i)/r
+    elif DOF ==3: 
+        h = phi_i*(x_point-x_i)/r*(y_point-y_i)/r
 
     # H = [h, 0,\
     #      0, h]

@@ -5,8 +5,7 @@ PyMFS gauss point generation
 '''
 To-do list:
 
-- This is currently extremely slow, figure out how to make faster.
-- Boundary integration should be handled differently???
+-
 '''
 
 import numpy as np
@@ -49,42 +48,7 @@ class gauss_points:
         pylab.rc('text.latex', preamble=r'\usepackage{cmbright}')
         
         
-        '''Test plot'''
-        fig,ax=pylab.subplots()
 
-        radius = 1
-        center = [0,0]
-        start = 0 
-        end = np.pi/2
-        resolution=100
-        vertices = [[radius*np.cos(x)+center[0],radius*np.sin(x)+center[1]]
-                for x in np.linspace(start,end,resolution)[:-1]]
-        vertices.append([radius*np.cos(end)+center[0],radius*np.sin(end)+center[1]])
-        vertices.append([0,0])
-        polygon = Polygon(vertices, facecolor=(0,0.541176,0.541176,0.3))
-        ax.add_patch(polygon) 
-        
-        if self.points:
-            pylab.scatter(np.array(self.points)[:,0], np.array(self.points)[:,1], s=25, color = [(0,0.541176,0.541176)])
-        
-        pts = pylab.scatter(np.array(self.input_data.node_coor)[:,0], 
-                            np.array(self.input_data.node_coor)[:,1],
-                            s = 25,
-                            color = 'k')
-
-        x,y = zip(*self.polygon.xy)
-        line = Line2D(x,y,linestyle='-', color='k', linewidth=1)
-        ax.set_xlim((min(x)-0.1*max(x), 1.1*max(x)))
-        ax.set_ylim((min(y)-0.1*max(y), 1.1*max(y)))
-        ax.add_line(line)
-        ax.set_aspect(aspect= 1)
-        
-        sphereI = pylab.Circle((np.array(self.input_data.node_coor)[I,0],np.array(self.input_data.node_coor)[I,1]), self.input_data.radius, fill=False, color=(0.6627,0.6627,0.6627))
-        sphereJ = pylab.Circle((np.array(self.input_data.node_coor)[J,0],np.array(self.input_data.node_coor)[J,1]), self.input_data.radius, fill=False, color=(0.6627,0.6627,0.6627))
-        ax.add_patch(sphereI)
-        ax.add_patch(sphereJ)
-
-        pylab.show()
 
 
     '''
@@ -107,6 +71,7 @@ class gauss_points:
         weight_grid = np.array(list(zip(wi.ravel(), wj.ravel())))
         points = []
         weights = []
+        xpoints = []
         
         y1 = max(0,node_y-r, contrib_y-r)
         y2 = min(2,node_y+r, contrib_y+r)
@@ -129,7 +94,10 @@ class gauss_points:
                         points.append([x,y])
                         weights.append([weight_grid[a,0], weight_grid[a,1]])
                     else:
+                        xpoints.append([x,y])
                         continue
+                elif pointInDomain==True and math.hypot(x-node_x, y-node_y) > r:
+                    xpoints.append([x,y])
             '''Populate quadrant 2'''
             for a in range(self.int_degree**2):
                 x = node_x - 0.5*r + 0.5*r*gauss_grid[a,0]
@@ -146,7 +114,10 @@ class gauss_points:
                         points.append([x,y])
                         weights.append([weight_grid[a,0], weight_grid[a,1]])
                     else:
+                        xpoints.append([x,y])
                         continue
+                elif pointInDomain==True and math.hypot(x-node_x, y-node_y) > r:
+                    xpoints.append([x,y])
             '''Populate quadrant 3'''
             for a in range(self.int_degree**2):
                 x = node_x + 0.5*r + 0.5*r*gauss_grid[a,0]
@@ -163,7 +134,10 @@ class gauss_points:
                         points.append([x,y])
                         weights.append([weight_grid[a,0], weight_grid[a,1]])
                     else:
+                        xpoints.append([x,y])
                         continue
+                elif pointInDomain==True and math.hypot(x-node_x, y-node_y) > r:
+                    xpoints.append([x,y])
             '''Populate quadrant 4'''
             for a in range(self.int_degree**2):
                 x = node_x + 0.5*r + 0.5*r*gauss_grid[a,0]
@@ -180,7 +154,10 @@ class gauss_points:
                         points.append([x,y])
                         weights.append([weight_grid[a,0], weight_grid[a,1]])
                     else:
+                        xpoints.append([x,y])
                         continue
+                elif pointInDomain==True and math.hypot(x-node_x, y-node_y) > r:
+                    xpoints.append([x,y])
         else:
             '''
             Otherwise I=\=J, so we are attempting to integrate a sphere overlap.
@@ -203,7 +180,10 @@ class gauss_points:
                             points.append([x,y])
                             weights.append([weight_grid[a,0], weight_grid[a,1]])
                         else:
+                            xpoints.append([x,y])
                             continue
+                    elif pointInDomain==True and math.hypot(x-node_x, y-node_y) > r or pointInDomain==True and math.hypot(x-contrib_x,y-contrib_y)>r:
+                        xpoints.append([x,y])
                 '''Populate quadrant 2'''
                 for a in range(self.int_degree**2):
                     x = node_x - 0.5*r + 0.5*r*gauss_grid[a,0]
@@ -220,7 +200,11 @@ class gauss_points:
                             points.append([x,y])
                             weights.append([weight_grid[a,0], weight_grid[a,1]])
                         else:
+                            xpoints.append([x,y])
                             continue
+                    elif pointInDomain==True and math.hypot(x-node_x, y-node_y) > r or pointInDomain==True and math.hypot(x-contrib_x,y-contrib_y)>r:
+                        xpoints.append([x,y])
+                
                 '''Populate quadrant 3'''
                 for a in range(self.int_degree**2):
                     x = node_x + 0.5*r + 0.5*r*gauss_grid[a,0]
@@ -238,6 +222,8 @@ class gauss_points:
                             weights.append([weight_grid[a,0], weight_grid[a,1]])
                         else:
                             continue
+                    elif pointInDomain==True and math.hypot(x-node_x, y-node_y) > r or pointInDomain==True and math.hypot(x-contrib_x,y-contrib_y)>r:
+                        xpoints.append([x,y])
                 '''Populate quadrant 4'''
                 for a in range(self.int_degree**2):
                     x = node_x + 0.5*r + 0.5*r*gauss_grid[a,0]
@@ -255,5 +241,56 @@ class gauss_points:
                             weights.append([weight_grid[a,0], weight_grid[a,1]])
                         else:
                             continue
+                    elif pointInDomain==True and math.hypot(x-node_x, y-node_y) > r or pointInDomain==True and math.hypot(x-contrib_x,y-contrib_y)>r:
+                        xpoints.append([x,y])
+                        
+                        
+        '''Test plot'''
+        # fig,ax=pylab.subplots()
+        
+        # radius = 1
+        # center = [1,1]
+        # start = 0
+        # end = np.pi*2
+        # resolution=100
+        # vertices = [[radius*np.cos(x)+center[0],radius*np.sin(x)+center[1]]
+        #         for x in np.linspace(start,end,resolution)[:-1]]
+        # # radius = 1
+        # # center = [0,1]
+        # # start = -np.pi/6
+        # # end = -np.pi/2
+        # # resolution=100
+        # # vertices += [[radius*np.cos(x)+center[0],radius*np.sin(x)+center[1]]
+        # #         for x in np.linspace(start,end,resolution)[:-1]]
+
+        # # vertices.append([[radius*np.cos(x)+center[0],radius*np.sin(x)+center[1]] for x in np.linspace(start,end,resolution)[:-1]])
+        # # vertices.append([0,0])
+        # # vertices.append([0,1])
+        # polygon = Polygon(vertices, facecolor=(0,0.541176,0.541176,0.3))
+        # ax.add_patch(polygon) 
+        
+        # # if points:
+        # #     pylab.scatter(np.array(points)[:,0], np.array(points)[:,1], s=10, color = [(0,0.541176,0.541176)])
+        # # if xpoints:    
+        # #     pylab.scatter(np.array(xpoints)[:,0], np.array(xpoints)[:,1], s=10, color = 'r')
+
+        # pts = pylab.scatter(np.array(self.input_data.node_coor)[:,0], 
+        #                     np.array(self.input_data.node_coor)[:,1],
+        #                     s = 25,
+        #                     color = 'k')
+
+        # x,y = zip(*self.polygon.xy)
+        # line = Line2D(x,y,linestyle='-', color='k', linewidth=1)
+        # ax.set_xlim((min(x)-0.1*max(x), 1.1*max(x)))
+        # ax.set_ylim((min(y)-0.1*max(y), 1.1*max(y)))
+        # ax.add_line(line)
+        # ax.set_aspect(aspect= 1)
+        
+        # sphereI = pylab.Circle((np.array(self.input_data.node_coor)[self.I,0],np.array(self.input_data.node_coor)[self.I,1]), self.input_data.radius, fill=False, color=(0.6627,0.6627,0.6627))
+        # sphereJ = pylab.Circle((np.array(self.input_data.node_coor)[self.J,0],np.array(self.input_data.node_coor)[self.J,1]), self.input_data.radius, fill=False, color=(0.6627,0.6627,0.6627))
+        # ax.add_patch(sphereI)
+        # ax.add_patch(sphereJ)
+
+        # pylab.show()
 
         return points, weights, y1, y2

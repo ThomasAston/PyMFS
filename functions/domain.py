@@ -107,7 +107,38 @@ Function for defining a straight edge in the domain, using start and end
 points.
 '''
 def straight_line(point1=[0, 0], point2=[1, 0]):
-    vertices = [point1, point2]
+    point1_x = point1[0]
+    point1_y = point1[1]
+    point2_x = point2[0]
+    point2_y = point2[1]
+
+    if point2_x-point1_x ==0 : 
+        gradient = 'undefined' # Line is vertical
+        y_intercept = 'undefined'
+    else:
+        gradient = (point2_y-point1_y)/(point2_x-point1_x)
+        y_intercept = point2_y-gradient*point2_x
+    
+    # vertices = []
+    # if gradient == 'undefined':
+    #     x = point1_x
+    #     for y in np.linspace(point1_y,point2_y,100):
+    #         vertices.append([x,y])
+    # else: 
+    #     for x in np.linspace(point1_x,point2_x,100):
+    #         y = gradient*x + y_intercept
+    #         vertices.append([x,y])
+    # # vertices = []
+    # # vertices.append(point1)
+    # # # vertices = [[x,y] for x in np.linspace(point1_x,point2_x,100)[:-1] for y in np.linspace(point1_y,point2_y,100)[:-1]]
+    # # for x in np.linspace(point1_x,point2_x,100):
+    # #     for y in np.linspace(point1_y,point2_y,100):
+    # #         vertices.append([x,y])
+    
+    # # vertices.append(point2)
+    vertices = [point1,point2]
+
+
     return vertices
 
 '''
