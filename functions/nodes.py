@@ -46,8 +46,6 @@ class nodes:
                         self.coor.append([x[i],y[j]])
         
         self.coor = np.array(self.coor)
-        
-        # self.coor = np.array(list(zip(xv.ravel(), yv.ravel())))
         self.num = len(self.coor)
         self.nx = nx
         self.ny= ny
@@ -61,9 +59,6 @@ class nodes:
         
         pylab.rc('text', usetex=True)
         pylab.rc('text.latex', preamble=r'\usepackage{cmbright}')
-        # pylab.rcParams["font.family"] = "serif"
-        # pylab.rcParams["mathtext.fontset"] = "dejavuserif"
-
         color = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w'] 
         
         fig, ax = pylab.subplots()
@@ -80,8 +75,7 @@ class nodes:
         line.set_color('k')
         ax.grid(True)
         ax.set_aspect(aspect= 1)
-        ax.add_patch(self.domain.polygon)  
-        # ax.scatter(x,y,color='r') 
+        ax.add_patch(self.domain.polygon)
 
         for i in range(len(self.domain.subPolygon)):
             x_sub, y_sub = zip(*self.domain.subPolygon[i].xy)
@@ -89,7 +83,6 @@ class nodes:
             line_sub.set_color('k')
             ax.add_line(line_sub)
             self.domain.subPolygon[i].set_color(color[7])
-            # self.subPolygon.set_alpha(0.3)
             ax.add_patch(self.domain.subPolygon[i]) 
 
         pylab.scatter(self.coor[:,0], 

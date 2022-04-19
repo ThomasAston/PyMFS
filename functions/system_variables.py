@@ -8,8 +8,9 @@ To-do list:
 - Maybe combine K and f loops to make faster...
 '''
 
+from tabnanny import check
 import numpy as np
-from functions.input_data import input_data
+# from functions.input_data import input_data
 from .C_mat import *
 from .K_mat import *
 from .f_vec import *
@@ -22,7 +23,7 @@ class system_variables:
         self.C = C(input_data)
 
         print('Generating algebraic system...')
-        self.K, self.f = self.assemble()
+        self.K, self.f, self.delete = self.assemble()
         print('Algebraic system assembled.')
         
     '''
@@ -41,7 +42,7 @@ class system_variables:
         K = np.zeros((Ntot*Ndof*Ndim,Ntot*Ndof*Ndim))
         KU = np.zeros((Ntot*Ndof*Ndim,Ntot*Ndof*Ndim))
         f = np.zeros((Ntot*Ndof,Ndim))
-
+        
         '''
         Loop over nodes I and J (direct spheres and overlap regions)
         and evaluate stiffness matrix and force vector components.
@@ -49,17 +50,45 @@ class system_variables:
         Force components are only evaluated for direct spheres whereas
         stiffness components include direct spheres AND overlap regions.
         '''
+        delete_rows=[]
+        delete_cols=[]
         for I in range(Ntot):
+            print('Assembling f for node: ',I,'..............')
             f_I = f_vec(I,self).vec
             f[Ndof*I:Ndof*I+Ndof] = f_I
-            for J in range(Ntot):   
-                K_IJ, KU_IJ = K_mat(I,J,self).mat
-                K[Ndim*Ndof*I:Ndim*Ndof+Ndim*Ndof*I,Ndim*Ndof*J:Ndim*Ndof+Ndim*Ndof*J] = K_IJ
-                KU[Ndim*Ndof*I:Ndim*Ndof+Ndim*Ndof*I,Ndim*Ndof*J:Ndim*Ndof+Ndim*Ndof*J] = KU_IJ
-        
-        f = np.ravel(f)
-        K = K - KU
+            for J in range(Ntot):
+                print('Assembling K for nodes: ',I, 'and', J,'..............')
+                K_IJ, KU_IJ, type = K_mat(I,J,self).mat
+                if type == 'Interior':
+                    K[Ndim*Ndof*I:Ndim*Ndof+Ndim*Ndof*I,Ndim*Ndof*J:Ndim*Ndof+Ndim*Ndof*J] = K_IJ
+                    KU[Ndim*Ndof*I:Ndim*Ndof+Ndim*Ndof*I,Ndim*Ndof*J:Ndim*Ndof+Ndim*Ndof*J] = KU_IJ
+                elif type == 'Dirichlet':
+                    K[Ndim*Ndof*I:Ndim*Ndof+Ndim*Ndof*I,Ndim*Ndof*J:Ndim*Ndof+Ndim*Ndof*J] = K_IJ
+                    KU[Ndim*Ndof*I:Ndim*Ndof+Ndim*Ndof*I,Ndim*Ndof*J:Ndim*Ndof+Ndim*Ndof*J] = KU_IJ
+                    
+                    checkxI = Ndim*Ndof*I not in delete_rows
+                    checkyI = Ndim*Ndof*I+1 not in delete_rows
+                    checkxJ = Ndim*Ndof*J not in delete_cols
+                    checkyJ = Ndim*Ndof*J+1 not in delete_cols
 
-        return K, f
+                    if checkxI == True:
+                        delete_rows.append(Ndim*Ndof*I)
+                    if checkyI==True:
+                        delete_rows.append(Ndim*Ndof*I + 1)
+                    if checkxJ == True:
+                        delete_cols.append(Ndim*Ndof*J)
+                    if checkyJ==True:
+                        delete_cols.append(Ndim*Ndof*J + 1)
+
+            
+        f = np.reshape(f, [Ntot*Ndof*Ndim])
+        K = K - KU
+        
+        f = np.delete(f,delete_rows,0)
+        K = np.delete(K,delete_rows,0)
+        K = np.delete(K,delete_cols,1)
+       
+
+        return K, f, delete_rows
 
 

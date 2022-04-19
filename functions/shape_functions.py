@@ -43,8 +43,11 @@ def shape_functions(node_num, DOF, point, input_data):
         else:
             continue
     
-    phi_i = W_i/sum_W_j 
-
+    if sum_W_j==0:
+        phi_i = 0
+    else:
+        phi_i = W_i/sum_W_j 
+    
     if DOF == 0:
         h = phi_i
     elif DOF == 1:

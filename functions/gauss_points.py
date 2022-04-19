@@ -248,13 +248,13 @@ class gauss_points:
         '''Test plot'''
         # fig,ax=pylab.subplots()
         
-        # radius = 1
-        # center = [1,1]
-        # start = 0
-        # end = np.pi*2
-        # resolution=100
-        # vertices = [[radius*np.cos(x)+center[0],radius*np.sin(x)+center[1]]
-        #         for x in np.linspace(start,end,resolution)[:-1]]
+        # # radius = 1
+        # # center = [1,1]
+        # # start = 0
+        # # end = np.pi*2
+        # # resolution=100
+        # # vertices = [[radius*np.cos(x)+center[0],radius*np.sin(x)+center[1]]
+        # #         for x in np.linspace(start,end,resolution)[:-1]]
         # # radius = 1
         # # center = [0,1]
         # # start = -np.pi/6
@@ -266,13 +266,13 @@ class gauss_points:
         # # vertices.append([[radius*np.cos(x)+center[0],radius*np.sin(x)+center[1]] for x in np.linspace(start,end,resolution)[:-1]])
         # # vertices.append([0,0])
         # # vertices.append([0,1])
-        # polygon = Polygon(vertices, facecolor=(0,0.541176,0.541176,0.3))
-        # ax.add_patch(polygon) 
+        # # polygon = Polygon(vertices, facecolor=(0,0.541176,0.541176,0.3))
+        # # ax.add_patch(polygon) 
         
-        # # if points:
-        # #     pylab.scatter(np.array(points)[:,0], np.array(points)[:,1], s=10, color = [(0,0.541176,0.541176)])
-        # # if xpoints:    
-        # #     pylab.scatter(np.array(xpoints)[:,0], np.array(xpoints)[:,1], s=10, color = 'r')
+        # if points:
+        #     pylab.scatter(np.array(points)[:,0], np.array(points)[:,1], s=10, color = [(0,0.541176,0.541176)])
+        # if xpoints:    
+        #     pylab.scatter(np.array(xpoints)[:,0], np.array(xpoints)[:,1], s=10, color = 'r')
 
         # pts = pylab.scatter(np.array(self.input_data.node_coor)[:,0], 
         #                     np.array(self.input_data.node_coor)[:,1],

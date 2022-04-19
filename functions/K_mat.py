@@ -41,8 +41,8 @@ class K_mat:
         J = self.J
         C = self.C
         input_data = self.input_data
-        surfaces = input_data.external_surfaces
-        surfaces += input_data.internal_surfaces
+        surfaces = input_data.external_surfaces[:]
+        surfaces += input_data.internal_surfaces[:]
         Ndof = 4
         Ndim = 2
         gauss = gauss_points(I,J,input_data)
@@ -62,6 +62,7 @@ class K_mat:
                 be full of zeros and so we can skip calculations...
                 '''
                 if np.array(gauss.points).size==0:
+                    type = ''
                     continue
                 else:
                     '''
@@ -88,17 +89,19 @@ class K_mat:
                     for surface_number in input_data.BC[4]:
                         surf = surfaces[surface_number[0]]     # read current surface
                         surface = LineString(surf)             # create surface object
-                        coor = Point(input_data.node_coor[I])  # create point object from node
-                        dist = coor.distance(surface)          # distance from node to surface
+                        coorI = Point(input_data.node_coor[I])  # create point object from node
+                        distI = coorI.distance(surface)          # distance from node to surface
+                        coorJ = Point(input_data.node_coor[J])  # create point object from node
+                        distJ = coorJ.distance(surface)          # distance from node to surface
 
                         u_s = input_data.loads[0][dirichlet_count]
                         v_s = input_data.loads[1][dirichlet_count]
                         u_s = np.array([u_s, v_s])
                         
                         '''
-                        Does current sphere intersect a Dirichlet boundary?
+                        Is current node on Dirichlet boundary?
                         '''
-                        if dist < input_data.radius:            
+                        if distI < input_data.radius and distJ < input_data.radius:            
                             '''
                             If yes, loop over DoFs for current node,  
                             then move along the surface.
@@ -107,12 +110,9 @@ class K_mat:
                             '''
                             Loop over boundary integration points
                             '''
-                            # integration_points, integration_weights, t1,t2 = boundary_intpoints(I,I,surf,input_data)
                             integration_points,integration_weights, t1, t2, type = boundary_intpoints(I,I,surf,input_data)
                             for counter, point in enumerate(integration_points):
                                 wj = integration_weights[counter]
-                                # point = (np.array(surf)[0,0],integration_points[counter])
-                                # point = integration_points[counter]
 
                                 B_Im = B(I,m,point,input_data).mat
                                 B_Jn = B(J,n,point,input_data).mat
@@ -125,18 +125,13 @@ class K_mat:
                                 N = direction_cosines(surf)
                                 '''
                                 1D Gaussian product rule
-                                '''
-                                KU_ImJn_nested[m,n] += wj*(H_Im @ N @ self.C @ B_Jn + np.transpose(B_Im) @ self.C @ np.transpose(N) @ H_Jn)
-                                # integrand = H_Im @ N @ self.C @ B_Jn + np.transpose(B_Im) @ self.C @ np.transpose(N) @ H_Jn
-                                # if type=='Horizontal':
-                                #     KU_ImJn_nested[m,n] = np.trapz(integrand,x=t_int)
-                                # elif type=='Vertical':
-                                #     KU_ImJn_nested[m,n] = np.trapz(integrand,x=t_int)
-
+                                ''' 
+                                KU_ImJn_nested[m,n] += ((t2-t1)/2)*wj*(H_Im @ N @ self.C @ B_Jn + np.transpose(B_Im) @ self.C @ np.transpose(N) @ H_Jn)
                                 KU_ImJn[m*2:m*2+2, n*2:n*2+2] = KU_ImJn_nested[m,n]
-                            
-                            # dirichlet_count += 1
+                        
+                            type = 'Dirichlet'
+                        else:
+                            type = 'Interior'
         
-        # K_ImJn = K_ImJn + KU_ImJn
 
-        return K_ImJn, KU_ImJn
+        return K_ImJn, KU_ImJn, type

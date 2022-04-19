@@ -39,8 +39,8 @@ class f_vec():
         I = self.I
         C = self.C
         input_data = self.input_data
-        surfaces = input_data.external_surfaces
-        surfaces += input_data.internal_surfaces
+        surfaces = input_data.external_surfaces[:]
+        surfaces += input_data.internal_surfaces[:]
         
         neumann_count = 0 # Initialise counter that counts number of neumann spheres encountered
         dirichlet_count = 0 # Initialise counter that counts number of dirichlet spheres encountered
@@ -49,7 +49,6 @@ class f_vec():
         Ndim = 2
 
         gauss = gauss_points(I,I,input_data)
-        
         f_Im = np.zeros([Ndof,Ndim])       # Un-nested version of K
         fHat_Im = np.zeros([Ndof,Ndim])    # Empty boundary force vector
 
@@ -75,7 +74,6 @@ class f_vec():
                 If yes, loop over DoFs for current node,  
                 then move along the surface.
                 '''
-                # integration_points, integration_weights, t1,t2 = boundary_intpoints(I,I,surf,input_data)
                 integration_points,integration_weights, t1, t2, type = boundary_intpoints(I,I,surf,input_data)
                 for m in range(Ndof):
                     '''
@@ -83,8 +81,6 @@ class f_vec():
                     '''
                     for counter, point in enumerate(integration_points):
                         wj = integration_weights[counter]
-                        
-                        # point = (np.array(surf)[0,0],integration_points[counter])
                         
                         h_Im = shape_functions(I,m,point,input_data)
                         H_Im = np.array([[h_Im, 0],\
@@ -94,9 +90,6 @@ class f_vec():
                         1D Gaussian product rule
                         '''
                         fHat_Im[m,:] += ((t2-t1)/2)*wj*H_Im @ f_s
-                        # integrand = H_Im @ f_s
-                        # fHat_Im[m,:] = np.trapz(integrand,x=t_int)
-            # neumann_count += 1
 
         '''
         Loop over surfaces with prescribed displacements
@@ -119,7 +112,6 @@ class f_vec():
                 If yes, loop over DoFs for current node,  
                 then move along the surface.
                 '''
-                # integration_points, integration_weights, t1,t2 = boundary_intpoints(I,I,surf,input_data)
                 integration_points,integration_weights, t1, t2, type = boundary_intpoints(I,I,surf,input_data)
                 for m in range(Ndof):
                     '''
@@ -127,17 +119,13 @@ class f_vec():
                     '''
                     for counter, point in enumerate(integration_points):
                         wj = integration_weights[counter]
-                        # point = (np.array(surf)[0,0],integration_points[counter])
                         B_Im = B(I,m,point,input_data).mat
                         N = direction_cosines(surf)
                         '''
                         1D Gaussian product rule
                         '''
                         fHat_Im[m,:] -= ((t2-t1)/2)*wj*np.transpose(B_Im) @ self.C @ np.transpose(N) @ u_s
-                        # integrand = np.transpose(B_Im) @ self.C @ np.transpose(N) @ u_s
-                        # fHat_Im[m,:] = -np.trapz(integrand,x=t_int)
-                        # dirichlet_count += 1
-
+                        
         f_Im = f_Im + fHat_Im
 
         return f_Im

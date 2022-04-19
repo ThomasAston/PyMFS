@@ -127,15 +127,15 @@ class pre_process:
         MATax.get_yaxis().set_visible(False)
         MATax.get_xaxis().set_visible(False)
         MATax.text(0.03,0.45, 'Physical \n properties:')
-        MATax_inner1 = pylab.axes([0.15, 0.13, 0.04, 0.03])
-        MATax_inner2 = pylab.axes([0.15, 0.18, 0.04, 0.03])
-        MATax_inner3 = pylab.axes([0.15, 0.23, 0.04, 0.03])
+        # MATax_inner1 = pylab.axes([0.15, 0.13, 0.04, 0.03])
+        MATax_inner2 = pylab.axes([0.15, 0.16, 0.04, 0.03])
+        MATax_inner3 = pylab.axes([0.15, 0.20, 0.04, 0.03])
         MATBox3 = TextBox(MATax_inner3, r'$E=$ ')
         MATBox3.set_val("100")
         MATBox2 = TextBox(MATax_inner2, r'$\nu=$ ')
         MATBox2.set_val("0.3")
-        MATBox1 = TextBox(MATax_inner1, r'$t=$ ')
-        MATBox1.set_val("1")
+        # MATBox1 = TextBox(MATax_inner1, r'$t=$ ')
+        # MATBox1.set_val("1")
 
         SUBMITax = pylab.axes([0.76, 0.45, 0.15, 0.1])
         
@@ -248,8 +248,7 @@ class pre_process:
         self.f_s = [self.f_sx, self.f_sy, self.f_sx_flag, self.f_sy_flag, self.f_s_edges]
         self.E = MATBox3.text
         self.nu = MATBox2.text
-        self.t = MATBox1.text
-        self.PhysicalProperties = [float(self.E),float(self.nu),float(self.t)]
+        self.PhysicalProperties = [float(self.E),float(self.nu)]
 
         return self.u_s, self.f_s, self.PhysicalProperties
 

@@ -13,7 +13,6 @@ input files, then solve and analyse the results of the problem posed.
 '''
 
 from functions import *
-import time
 import pickle
 
 '''
@@ -49,11 +48,11 @@ Material addition:
 # edge3 = straight_line(point1=[2,2], point2=[0,2])
 # edge4 = straight_line(point1=[0,2], point2=[0,0])
 # my_edges = [edge1, edge2, edge3, edge4]
-# # '''
-# # Material removal:
-# # '''
-# # subedge1 = circle(center=np.array([1,1]),radius=0.3) 
-# # # subedge2 = circle(center=np.array([2,7]),radius=1) 
+# # # '''
+# # # Material removal:
+# # # '''
+# # subedge1 = circle(center=np.array([1,2]),radius=0.4) 
+# # subedge2 = circle(center=np.array([2,7]),radius=1) 
 # # my_subedges = [subedge1, subedge2]
 # my_subedges = []
 
@@ -66,33 +65,34 @@ Material addition:
 # Discretise the domain by selecting number of nodes.
 # Note, at present sphere sizing is uniform only.
 # '''
-# my_nodes = nodes(my_domain, nx=6, ny=6, method='Regular')
+# my_nodes = nodes(my_domain, nx=24, ny=24, method='Regular')
 
 # '''
 # Enter the pre-processing UI to view geometry, set boundary conditions and
 # submit the job for solving:
 # '''
-# pre_process(my_domain, my_nodes, job_ID='Cantilever1')
+# pre_process(my_domain, my_nodes, job_ID="examples\\2d_elastostatics\\bending\\special arrangement\\bending_N24")
 
 
-'''
----------------------------------------------------------------------------------
---------------------------- 2. Solving ------------------------------------------
----------------------------------------------------------------------------------
-'''
+# # '''
+# # ---------------------------------------------------------------------------------
+# # --------------------------- 2. Solving ------------------------------------------
+# # ---------------------------------------------------------------------------------
+# # '''
 '''
 Select the input file to be solved and send it to PyMFS solver:
 '''
-solution = solve(job_ID='BiUnitSquare_N12.mfs')
+# solution = solve(job_ID="examples\\2d_elastostatics\\bending\\special arrangement\\bending_N24.mfs")
 
-''''
-Optional: dump solution object into file for later use.
-'''
-filehandler = open('BiUnitSquare_N12.sol', 'wb') 
-pickle.dump(solution, filehandler)
+# '''
+# Optional: dump solution object into file for later use.
+# '''
+# filehandler = open("examples\\2d_elastostatics\\bending\\special arrangement\\bending_N24.sol", 'wb') 
+# pickle.dump(solution, filehandler)
 
-# filehandler = open('BiUnitSquare_N12.sol', 'rb') 
-# solution = pickle.load(filehandler)
+filehandler = open("examples\\2d_elastostatics\\hole\\hole_N24.sol", 'rb') 
+solution = pickle.load(filehandler)
+
 
 '''
 ---------------------------------------------------------------------------------
@@ -102,5 +102,4 @@ pickle.dump(solution, filehandler)
 '''
 Pass solution object into post-processing module. 
 '''
-
-post_process(solution).strain()
+post_process(solution)
